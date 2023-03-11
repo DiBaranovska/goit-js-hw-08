@@ -2,22 +2,37 @@ import trottle from 'lodash.throttle';
 
 const STORAGE_KEY = 'feedback-form-state';
 const form = document.querySelector('form');
-savedForm();
+const emailInput = document.querySelector('input');
+const textareaInput = document.querySelector('textarea');
+
 form.addEventListener('submit', submitForm);
 
-form.addEventListener('input', trottle(inputForm, 500));
+emailInput.addEventListener('input', trottle(inputEmail, 500));
+textareaInput.addEventListener('input', trottle(inputTextarea, 500));
 
-function inputForm(event) {
-  const formResult = {
-    email: event.target.value,
-    message: event.target.value,
-  };
+let formResult = {
+  email: '',
+  message: '',
+};
+
+savedForm();
+function inputEmail(event) {
+  formResult = { ...formResult, email: event.target.value };
   localStorage.setItem(STORAGE_KEY, JSON.stringify(formResult));
+  return formResult;
 }
+
+function inputTextarea(event) {
+  formResult = { ...formResult, message: event.target.value };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(formResult));
+  return formResult;
+}
+
 function savedForm() {
   const savedSettings = localStorage.getItem(STORAGE_KEY);
   if (savedSettings) {
     const parsedSettings = JSON.parse(savedSettings);
+    formResult = { ...parsedSettings };
     for (let key in parsedSettings) {
       form.elements[key].value = parsedSettings[key];
     }
