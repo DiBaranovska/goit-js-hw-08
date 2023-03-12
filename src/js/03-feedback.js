@@ -42,11 +42,17 @@ function savedForm() {
 function submitForm(event) {
   event.preventDefault();
   const formElements = event.currentTarget.elements;
-  const formResult = {
-    email: formElements.email.value,
-    message: formElements.message.value,
-  };
-  console.log(formResult);
-  event.target.reset();
-  localStorage.removeItem(STORAGE_KEY);
+  if (formElements.email.value && formElements.message.value !== '') {
+    const formResultConsol = {
+      email: formElements.email.value,
+      message: formElements.message.value,
+    };
+    formResult = {
+      email: '',
+      message: '',
+    };
+    console.log(formResultConsol);
+    event.target.reset();
+    localStorage.removeItem(STORAGE_KEY);
+  }
 }
